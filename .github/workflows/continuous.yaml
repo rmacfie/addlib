@@ -27,11 +27,12 @@ jobs:
         working-directory: src/AddLib
         run: dotnet pack -c Release -o ../../dist
 
-      # - name: Push Nuget packages
-      #   working-directory: dist
-      #   env:
-      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      #   run: dotnet nuget publish 'AddLib.*'
+      - name: Push Nuget packages
+        working-directory: dist
+        env:
+          NUGET_API: https://api.nuget.org/v3/index.json
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ./*.nupkg -s $NUGET_API -k $NUGET_API_KEY
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2

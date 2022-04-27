@@ -9,6 +9,7 @@
 
     <Authors>Robert Macfie</Authors>
     <Copyright>Copyright Robert Macfie</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>A simple extension to encapsulate DI configuration per .NET project</Description>
     <PackageTags>ioc;dependencyinjection</PackageTags>
   </PropertyGroup>

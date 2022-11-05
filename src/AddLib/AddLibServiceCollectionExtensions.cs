@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AddLib;
 
-// ReSharper disable once CheckNamespace
+// ReSharper disable CheckNamespace
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class AddLibServiceCollectionExtensions
@@ -52,7 +53,7 @@ public static class AddLibServiceCollectionExtensions
 
         if (Activator.CreateInstance(libraryType) is not ILibrary instance)
             throw new InvalidOperationException(
-                $"Failed to create instance of '{libraryType.FullName}'"
+                $"Failed to create an instance of '{libraryType.FullName}'"
             );
 
         return services.AddLibrary(instance);
@@ -72,31 +73,31 @@ public static class AddLibServiceCollectionExtensions
 
     private static IServiceCollection AddLibraries(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
-        foreach (var assembly in assemblies) services.AddLibrary(assembly, false);
+        foreach (var assembly in assemblies)
+        {
+            services.AddLibrary(assembly, false);
+        }
 
         return services;
     }
 
-    private static IServiceCollection AddLibrary(this IServiceCollection services, Assembly assembly,
-        bool throwIfNotFound)
+    private static IServiceCollection AddLibrary(
+        this IServiceCollection services, Assembly assembly, bool throwIfNotFound)
     {
         var candidates = assembly.GetExportedTypes()
             .Where(t => !t.IsAbstract && typeof(ILibrary).IsAssignableFrom(t))
             .ToArray();
-
-        if (candidates.Length > 1)
-            throw new ArgumentException(
-                $"Assembly {assembly.GetName().Name} has multiple public, non-abstract {nameof(ILibrary)} implementations"
-            );
 
         if (candidates.Length == 0 && throwIfNotFound)
             throw new ArgumentException(
                 $"Assembly {assembly.GetName().Name} does not have a public, non-abstract {nameof(ILibrary)} implementation"
             );
 
-        if (candidates.Length == 0)
-            return services;
+        if (candidates.Length > 1)
+            throw new ArgumentException(
+                $"Assembly {assembly.GetName().Name} has multiple public, non-abstract {nameof(ILibrary)} implementations"
+            );
 
-        return services.AddLibrary(candidates[0]);
+        return candidates.Length == 0 ? services : services.AddLibrary(candidates[0]);
     }
 }

@@ -1,4 +1,4 @@
-# AddLib
+﻿# AddLib
 
 Ever been annoyed that your application's entry point, `Program.cs`, must
 know about the whole dependency graph of every project in your solution to
@@ -19,6 +19,7 @@ dotnet add package AddLib
 AddLib has a single external reference to the lightweight
 `Microsoft.Extensions.DependencyInjection.Abstractions` package, which will
 also be installed implicitly.
+
 
 ## How to use
 
@@ -55,6 +56,7 @@ services.AddLibrary(typeof(MySolution.Domain.IUserDomainService).Assembly);
 // Scans all loaded assemblies matching the pattern
 services.AddLibraries("Foo.*");
 ```
+
 
 ## Making `internal` visible to tests
 

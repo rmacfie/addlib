@@ -53,7 +53,7 @@ Or let AddLib scan assemblies for the `ILibrary` implementations:
 // Scans the given assembly
 services.AddLibrary(typeof(MySolution.Domain.IUserDomainService).Assembly);
 
-// Scans all loaded assemblies matching the pattern
+// Scans all loaded assemblies matching a pattern
 services.AddLibraries("MySolution.*");
 ```
 

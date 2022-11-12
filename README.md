@@ -9,8 +9,8 @@ it makes them difficult to use via Dependency Injection?
 
 AddLib can help you 🎉
 
-With AddLib you get a simple convention for truly encapsulating internal types
-and functionality of a class library.
+AddLib provides a simple convention for encapsulating the internal types and
+functionality of class libraries.
 
 
 ## Installation

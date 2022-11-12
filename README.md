@@ -1,4 +1,4 @@
-﻿# AddLib
+﻿# AddLib ![Nuget](https://img.shields.io/nuget/v/AddLib)
 
 Ever been annoyed that your application's entry point, `Program.cs`, must
 know about the whole dependency graph of every project in your solution to
@@ -8,6 +8,9 @@ Ever been annoyed that you can't mark a class or interface as `internal` because
 it makes them difficult to use via Dependency Injection?
 
 AddLib can help you 🎉
+
+With AddLib you get a simple convention for truly encapsulating internal types
+and functionality of a class library.
 
 
 ## Installation

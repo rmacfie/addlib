@@ -23,7 +23,7 @@ also be installed implicitly.
 
 ## How to use
 
-In your library project, add a class that implements `AddLib.ILibrary`:
+In your class library project, add a class that implements `AddLib.ILibrary`:
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -54,13 +54,13 @@ Or let AddLib scan assemblies for the `ILibrary` implementations:
 services.AddLibrary(typeof(MySolution.Domain.IUserDomainService).Assembly);
 
 // Scans all loaded assemblies matching the pattern
-services.AddLibraries("Foo.*");
+services.AddLibraries("MySolution.*");
 ```
 
 
 ## Making `internal` visible to tests
 
-You might ask "Don't I still need to make all the classes and interfaces
+You might ask: "Don't I still need to make all the classes and interfaces
 `public` so I can reference them in test projects?"
 
 Not necessarily. You can use the `InternalsVisibleTo` attribute.
@@ -75,7 +75,7 @@ Either in your `Project.csproj` or `Directory.Build.props`:
 </ItemGroup>
 ```
 
-or as code:
+Or as code, placed anywhere in your library project:
 
 ```csharp
 [assembly: InternalsVisibleTo("MySolution.UnitTests")]

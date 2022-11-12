@@ -5,7 +5,6 @@ using System.Reflection;
 using AddLib;
 
 // ReSharper disable CheckNamespace
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class AddLibServiceCollectionExtensions

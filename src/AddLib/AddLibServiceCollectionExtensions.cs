@@ -19,15 +19,22 @@ public static class AddLibServiceCollectionExtensions
     ///     <c>?</c> to match a single character.
     /// </summary>
     /// <param name="services">The service collection</param>
-    /// <param name="assemblyNamePattern">The assembly name pattern, e.g. <c>"Acme.Domain.*"</c>.</param>
+    /// <param name="assemblyNamePattern">
+    ///     The assembly name pattern, e.g. <c>"Acme.Domain.*"</c>.
+    /// </param>
     public static IServiceCollection AddLibraries(
-        this IServiceCollection services, string assemblyNamePattern)
+        this IServiceCollection services,
+        string assemblyNamePattern
+    )
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
 
         if (string.IsNullOrEmpty(assemblyNamePattern))
-            throw new ArgumentException("Value cannot be null or empty.", nameof(assemblyNamePattern));
+            throw new ArgumentException(
+                "Value cannot be null or empty.",
+                nameof(assemblyNamePattern)
+            );
 
         var matchingAssemblies = AssemblyFinder.FindAssembliesByName(assemblyNamePattern);
         return services.AddLibraries(matchingAssemblies);
@@ -37,8 +44,7 @@ public static class AddLibServiceCollectionExtensions
     ///     Scans an <see cref="Assembly" /> for an <see cref="ILibrary" /> implementation,
     ///     and applies its configuration to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary(
-        this IServiceCollection services, Assembly assembly)
+    public static IServiceCollection AddLibrary(this IServiceCollection services, Assembly assembly)
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
@@ -53,8 +59,7 @@ public static class AddLibServiceCollectionExtensions
     ///     Applies the service configuration of an <see cref="ILibrary" />
     ///     implementation to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary<TLibrary>(
-        this IServiceCollection services)
+    public static IServiceCollection AddLibrary<TLibrary>(this IServiceCollection services)
         where TLibrary : ILibrary
     {
         if (services == null)
@@ -67,8 +72,7 @@ public static class AddLibServiceCollectionExtensions
     ///     Applies the service configuration of an <see cref="ILibrary" />
     ///     implementation to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary(
-        this IServiceCollection services, Type libraryType)
+    public static IServiceCollection AddLibrary(this IServiceCollection services, Type libraryType)
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
@@ -94,8 +98,7 @@ public static class AddLibServiceCollectionExtensions
     ///     Applies the service configuration of an <see cref="ILibrary" />
     ///     implementation to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary(
-        this IServiceCollection services, ILibrary instance)
+    public static IServiceCollection AddLibrary(this IServiceCollection services, ILibrary instance)
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
@@ -108,17 +111,26 @@ public static class AddLibServiceCollectionExtensions
     }
 
     private static IServiceCollection AddLibraries(
-        this IServiceCollection services, IEnumerable<Assembly> assemblies)
+        this IServiceCollection services,
+        IEnumerable<Assembly> assemblies
+    )
     {
-        foreach (var assembly in assemblies) services.AddLibrary(assembly, false);
+        foreach (var assembly in assemblies)
+        {
+            services.AddLibrary(assembly, false);
+        }
 
         return services;
     }
 
     private static IServiceCollection AddLibrary(
-        this IServiceCollection services, Assembly assembly, bool throwIfNotFound)
+        this IServiceCollection services,
+        Assembly assembly,
+        bool throwIfNotFound
+    )
     {
-        var candidates = assembly.GetExportedTypes()
+        var candidates = assembly
+            .GetExportedTypes()
             .Where(t => !t.IsAbstract && typeof(ILibrary).IsAssignableFrom(t))
             .ToArray();
 

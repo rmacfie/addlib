@@ -8,9 +8,7 @@ internal class WildcardMatcher
 
     public WildcardMatcher(string wildcardPattern)
     {
-        var regexPattern = Regex.Escape(wildcardPattern)
-            .Replace("\\?", ".")
-            .Replace("\\*", ".*");
+        var regexPattern = Regex.Escape(wildcardPattern).Replace("\\?", ".").Replace("\\*", ".*");
 
         _regex = new Regex($"^{regexPattern}$", RegexOptions.IgnoreCase);
     }

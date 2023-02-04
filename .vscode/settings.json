@@ -8,5 +8,20 @@
     "**/*.user": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true
+  },
+  "editor.formatOnSave": false,
+  "editor.rulers": [
+    80
+  ],
+  "[csharp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "csharpier.csharpier-vscode",
+    "editor.rulers": [
+      100
+    ]
+  },
+  "[json][jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
   }
 }

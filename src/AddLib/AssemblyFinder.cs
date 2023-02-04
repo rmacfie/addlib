@@ -11,7 +11,8 @@ internal static class AssemblyFinder
     {
         var wildcardMatcher = new WildcardMatcher(wildcardPattern);
 
-        var matchingAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+        var matchingAssemblies = AppDomain.CurrentDomain
+            .GetAssemblies()
             .Where(assembly => wildcardMatcher.IsMatch(assembly.GetName().Name ?? ""))
             .ToArray();
 

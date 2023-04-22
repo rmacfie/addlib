@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AddLib;
@@ -10,5 +11,5 @@ public interface ILibrary
     /// <summary>
     ///     Specifies the method that is used to configure services and dependencies.
     /// </summary>
-    void ConfigureServices(IServiceCollection services);
+    void ConfigureServices(IServiceCollection services, IConfiguration configuration);
 }

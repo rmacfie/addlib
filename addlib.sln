@@ -3,13 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{2605186E-8F26-49A4-9F2E-25FAEFDB280D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{2605186E-8F26-49A4-9F2E-25FAEFDB280D}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		README.md = README.md
 		version.json = version.json
+		.csharpierrc = .csharpierrc
+		dotnet-tools.json = dotnet-tools.json
+		LICENSE = LICENSE
 	EndProjectSection
 EndProject
 

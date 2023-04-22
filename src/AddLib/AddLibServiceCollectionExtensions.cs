@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AddLib;
+using Microsoft.Extensions.Configuration;
 
 // ReSharper disable CheckNamespace
 // ReSharper disable UnusedType.Global
@@ -22,9 +23,11 @@ public static class AddLibServiceCollectionExtensions
     /// <param name="assemblyNamePattern">
     ///     The assembly name pattern, e.g. <c>"Acme.Domain.*"</c>.
     /// </param>
+    /// <param name="configuration">The configuration</param>
     public static IServiceCollection AddLibraries(
         this IServiceCollection services,
-        string assemblyNamePattern
+        string assemblyNamePattern,
+        IConfiguration configuration
     )
     {
         if (services == null)
@@ -37,14 +40,18 @@ public static class AddLibServiceCollectionExtensions
             );
 
         var matchingAssemblies = AssemblyFinder.FindAssembliesByName(assemblyNamePattern);
-        return services.AddLibraries(matchingAssemblies);
+        return services.AddLibraries(matchingAssemblies, configuration);
     }
 
     /// <summary>
     ///     Scans an <see cref="Assembly" /> for an <see cref="ILibrary" /> implementation,
-    ///     and applies its configuration to the <see cref="IServiceCollection" />.
+    ///     and applies its registration to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary(this IServiceCollection services, Assembly assembly)
+    public static IServiceCollection AddLibrary(
+        this IServiceCollection services,
+        Assembly assembly,
+        IConfiguration configuration
+    )
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
@@ -52,27 +59,34 @@ public static class AddLibServiceCollectionExtensions
         if (assembly == null)
             throw new ArgumentNullException(nameof(assembly));
 
-        return services.AddLibrary(assembly, true);
+        return services.AddLibrary(assembly, configuration, true);
     }
 
     /// <summary>
-    ///     Applies the service configuration of an <see cref="ILibrary" />
+    ///     Applies the service registration of an <see cref="ILibrary" />
     ///     implementation to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary<TLibrary>(this IServiceCollection services)
+    public static IServiceCollection AddLibrary<TLibrary>(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
         where TLibrary : ILibrary
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
 
-        return services.AddLibrary(typeof(TLibrary));
+        return services.AddLibrary(typeof(TLibrary), configuration);
     }
 
     /// <summary>
-    ///     Applies the service configuration of an <see cref="ILibrary" />
+    ///     Applies the service registration of an <see cref="ILibrary" />
     ///     implementation to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary(this IServiceCollection services, Type libraryType)
+    public static IServiceCollection AddLibrary(
+        this IServiceCollection services,
+        Type libraryType,
+        IConfiguration configuration
+    )
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
@@ -91,14 +105,18 @@ public static class AddLibServiceCollectionExtensions
                 $"Failed to create an instance of '{libraryType.FullName}'"
             );
 
-        return services.AddLibrary(instance);
+        return services.AddLibrary(instance, configuration);
     }
 
     /// <summary>
-    ///     Applies the service configuration of an <see cref="ILibrary" />
+    ///     Applies the service registration of an <see cref="ILibrary" />
     ///     implementation to the <see cref="IServiceCollection" />.
     /// </summary>
-    public static IServiceCollection AddLibrary(this IServiceCollection services, ILibrary instance)
+    public static IServiceCollection AddLibrary(
+        this IServiceCollection services,
+        ILibrary instance,
+        IConfiguration configuration
+    )
     {
         if (services == null)
             throw new ArgumentNullException(nameof(services));
@@ -106,18 +124,22 @@ public static class AddLibServiceCollectionExtensions
         if (instance == null)
             throw new ArgumentNullException(nameof(instance));
 
-        instance.ConfigureServices(services);
+        if (configuration == null)
+            throw new ArgumentNullException(nameof(configuration));
+
+        instance.ConfigureServices(services, configuration);
         return services;
     }
 
     private static IServiceCollection AddLibraries(
         this IServiceCollection services,
-        IEnumerable<Assembly> assemblies
+        IEnumerable<Assembly> assemblies,
+        IConfiguration configuration
     )
     {
         foreach (var assembly in assemblies)
         {
-            services.AddLibrary(assembly, false);
+            services.AddLibrary(assembly, configuration, false);
         }
 
         return services;
@@ -126,6 +148,7 @@ public static class AddLibServiceCollectionExtensions
     private static IServiceCollection AddLibrary(
         this IServiceCollection services,
         Assembly assembly,
+        IConfiguration configuration,
         bool throwIfNotFound
     )
     {
@@ -144,6 +167,8 @@ public static class AddLibServiceCollectionExtensions
                 $"Assembly {assembly.GetName().Name} has multiple public, non-abstract {nameof(ILibrary)} implementations"
             );
 
-        return candidates.Length == 0 ? services : services.AddLibrary(candidates[0]);
+        return candidates.Length == 0
+            ? services
+            : services.AddLibrary(candidates[0], configuration);
     }
 }

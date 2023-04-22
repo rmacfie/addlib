@@ -16,6 +16,11 @@ internal static class AssemblyFinder
             .Where(assembly => wildcardMatcher.IsMatch(assembly.GetName().Name ?? ""))
             .ToArray();
 
+        foreach (var assembly in matchingAssemblies)
+        {
+            AppDomain.CurrentDomain.Load(assembly.FullName);
+        }
+
         return matchingAssemblies;
     }
 }

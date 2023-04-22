@@ -19,8 +19,9 @@ functionality of class libraries.
 dotnet add package AddLib
 ```
 
-AddLib has a single external reference to the lightweight
-`Microsoft.Extensions.DependencyInjection.Abstractions` package, which will
+AddLib has a two external references to the lightweight
+`Microsoft.Extensions.DependencyInjection.Abstractions` and
+`Microsoft.Extensions.Configuration.Abstractions` packages, which will
 also be installed implicitly.
 
 
@@ -29,14 +30,18 @@ also be installed implicitly.
 In your class library project, add a class that implements `AddLib.ILibrary`:
 
 ```csharp
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MySolution.Domain;
 
 public class Library : AddLib.ILibrary
 {
-    public void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("Default");
+
+        services.AddTransient<IDatabaseContext>(x => new DatabaseContext(connectionString));
         services.AddTransient<IInternalDomainUtility, InternalDomainUtility>();
         services.AddTransient<IUserDomainService, UserDomainService>();
     }
@@ -47,17 +52,17 @@ In your application entry point, e.g. `Program.cs`, register the Library
 by pointing to the type:
 
 ```csharp
-services.AddLibrary<MySolution.Domain.Library>();
+services.AddLibrary<MySolution.Domain.Library>(configuration);
 ```
 
 Or let AddLib scan assemblies for the `ILibrary` implementations:
 
 ```csharp
 // Scans the given assembly
-services.AddLibrary(typeof(MySolution.Domain.IUserDomainService).Assembly);
+services.AddLibrary(typeof(MySolution.Domain.IUserDomainService).Assembly, configuration);
 
 // Scans all loaded assemblies matching a pattern
-services.AddLibraries("MySolution.*");
+services.AddLibraries("MySolution.*", configuration);
 ```
 
 

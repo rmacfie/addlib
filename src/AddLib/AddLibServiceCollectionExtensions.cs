@@ -62,7 +62,7 @@ public static class AddLibServiceCollectionExtensions
         if (libraryType == null)
             throw new ArgumentNullException(nameof(libraryType));
 
-        if (!libraryType.IsSubclassOf(typeof(ILibrary)))
+        if (!typeof(ILibrary).IsAssignableFrom(libraryType))
             throw new ArgumentException(
                 "The type must be an implementation of AddLib.ILibrary.",
                 nameof(libraryType)

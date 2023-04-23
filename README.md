@@ -1,5 +1,7 @@
 ﻿# AddLib ![Nuget](https://img.shields.io/nuget/v/AddLib)
 
+Make `internal` great again!
+
 Ever been annoyed that your application's entry point, `Program.cs`, must
 know about the whole dependency graph of every project in your solution to
 be able to configure the DI container?
@@ -60,9 +62,6 @@ Or let AddLib scan assemblies for the `ILibrary` implementations:
 ```csharp
 // Scans the given assembly
 services.AddLibrary(typeof(MySolution.Domain.IUserDomainService).Assembly, configuration);
-
-// Scans all loaded assemblies matching a pattern
-services.AddLibraries("MySolution.*", configuration);
 ```
 
 

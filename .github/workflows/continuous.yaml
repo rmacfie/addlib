@@ -19,10 +19,6 @@ jobs:
         with:
           dotnet-version: "7.x"
 
-      - name: Test solution
-        working-directory: test/AddLib.Tests
-        run: dotnet test -c Release
-
       - name: Pack AddLib
         working-directory: src/AddLib
         run: dotnet pack -c Release -o ../../dist

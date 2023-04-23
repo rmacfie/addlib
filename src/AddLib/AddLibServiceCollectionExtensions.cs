@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AddLib;
@@ -12,37 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class AddLibServiceCollectionExtensions
 {
-    /// <summary>
-    ///     Finds assemblies whose names matches the <paramref name="assemblyNamePattern" />,
-    ///     scans each assembly for an <see cref="ILibrary" /> implementation,
-    ///     and applies its configuration to the <see cref="IServiceCollection" />.
-    ///     The assembly name pattern uses <c>*</c> to match one or many characters and
-    ///     <c>?</c> to match a single character.
-    /// </summary>
-    /// <param name="services">The service collection</param>
-    /// <param name="assemblyNamePattern">
-    ///     The assembly name pattern, e.g. <c>"Acme.Domain.*"</c>.
-    /// </param>
-    /// <param name="configuration">The configuration</param>
-    public static IServiceCollection AddLibraries(
-        this IServiceCollection services,
-        string assemblyNamePattern,
-        IConfiguration configuration
-    )
-    {
-        if (services == null)
-            throw new ArgumentNullException(nameof(services));
-
-        if (string.IsNullOrEmpty(assemblyNamePattern))
-            throw new ArgumentException(
-                "Value cannot be null or empty.",
-                nameof(assemblyNamePattern)
-            );
-
-        var matchingAssemblies = AssemblyFinder.FindAssembliesByName(assemblyNamePattern);
-        return services.AddLibraries(matchingAssemblies, configuration);
-    }
-
     /// <summary>
     ///     Scans an <see cref="Assembly" /> for an <see cref="ILibrary" /> implementation,
     ///     and applies its registration to the <see cref="IServiceCollection" />.
@@ -128,20 +96,6 @@ public static class AddLibServiceCollectionExtensions
             throw new ArgumentNullException(nameof(configuration));
 
         instance.ConfigureServices(services, configuration);
-        return services;
-    }
-
-    private static IServiceCollection AddLibraries(
-        this IServiceCollection services,
-        IEnumerable<Assembly> assemblies,
-        IConfiguration configuration
-    )
-    {
-        foreach (var assembly in assemblies)
-        {
-            services.AddLibrary(assembly, configuration, false);
-        }
-
         return services;
     }
 
